@@ -511,6 +511,11 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
     processing.style.display = 'none';
     thankYou.style.display = 'flex';
     document.body.style.overflow = '';
+
+    // Show a clear thank-you state in the browser URL without requiring
+    // a separate Vercel route.
+    history.pushState({thankYou:true}, '', window.location.pathname + '?thank_you=true');
+
     window.scrollTo({top:0, behavior:'smooth'});
   }, 2000);
 });
@@ -523,6 +528,7 @@ document.getElementById('backHome').addEventListener('click', function(e){
   document.querySelector('footer').style.display = '';
   document.getElementById('thankYouPage').style.display = 'none';
   document.getElementById('orderForm').reset();
+  history.pushState({}, '', window.location.pathname);
   window.scrollTo({top:0, behavior:'smooth'});
 });
 </script>
