@@ -309,6 +309,10 @@ footer{background:#100f0e}
     <option value="3 Waist Shapers — Rs. 4,499">3 Waist Shapers — Rs. 4,499</option>
   </select>
 </label>
+<input type="hidden" name="product" value="Waist Shaper">
+<input type="hidden" name="quantity" id="orderQuantity">
+<input type="hidden" name="price" id="orderPrice">
+<input type="hidden" name="total" id="orderTotal">
 
       <div class="row">
         <label>Full Name<input required name="name" placeholder="Your name"></label>
@@ -316,7 +320,7 @@ footer{background:#100f0e}
       </div>
       <label>Complete Address<textarea required name="address" placeholder="House no, street, area"></textarea></label>
       <div class="row">
-        <label>Landmark<input name="landmark" placeholder="Nearby landmark"></label>
+        <label>Landmark<input required name="landmark" placeholder="Masjid / School / Bank / Main Road ka naam"></label>
         <label>City<input required name="city" placeholder="Your city"></label>
       </div>
       
@@ -435,6 +439,24 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
 
   const form = this;
   const data = Object.fromEntries(new FormData(form).entries());
+
+  // Convert the selected deal into Quantity, Price and Total for Google Sheets.
+  const deal = data.selectedDeal || '';
+  const qtyMatch = deal.match(/^(\d+)/);
+  const priceMatch = deal.match(/Rs\.\s*([\d,]+)/i);
+  const quantity = qtyMatch ? Number(qtyMatch[1]) : 1;
+  const price = priceMatch ? Number(priceMatch[1].replace(/,/g, '')) : 0;
+  const total = price;
+
+  data.product = 'Waist Shaper';
+  data.quantity = quantity;
+  data.price = price;
+  data.total = total;
+
+  document.getElementById('orderQuantity').value = quantity;
+  document.getElementById('orderPrice').value = price;
+  document.getElementById('orderTotal').value = total;
+
   const processing = document.getElementById('processingPage');
   const thankYou = document.getElementById('thankYouPage');
 
@@ -454,6 +476,7 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
         landmark: data.landmark || '',
         city: data.city || '',
         product: data.product || 'Waist Shaper',
+        deal: data.selectedDeal || '',
         quantity: data.quantity || '',
         price: data.price || '',
         total: data.total || ''
