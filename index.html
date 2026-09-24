@@ -512,6 +512,18 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
     thankYou.style.display = 'flex';
     document.body.style.overflow = '';
 
+    // TikTok Purchase event: fire only after the order reaches the Thank You state.
+    // TikTok's current standard event name is Purchase.
+    if (typeof ttq !== 'undefined' && typeof ttq.track === 'function') {
+      ttq.track('Purchase', {
+        content_type: 'product',
+        content_ids: ['waist-shaper'],
+        quantity: quantity,
+        value: total,
+        currency: 'PKR'
+      });
+    }
+
     // Show a clear thank-you state in the browser URL without requiring
     // a separate Vercel route.
     history.pushState({thankYou:true}, '', window.location.pathname + '?thank_you=true');
