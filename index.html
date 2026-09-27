@@ -475,30 +475,27 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
   processing.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 
-  // Send order to Google Apps Script / Google Sheet.
-  try {
-    await fetch(GOOGLE_SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'text/plain;charset=utf-8'},
-      body: JSON.stringify({
-        name: data.name || '',
-        phone: data.phone || '',
-        address: data.address || '',
-        landmark: data.landmark || '',
-        city: data.city || '',
-        product: data.product || 'Waist Shaper',
-        deal: data.selectedDeal || '',
-        quantity: data.quantity || '',
-        price: data.price || '',
-        total: data.total || ''
-      })
-    });
-  } catch (error) {
-    console.error('Google Sheet order submission:', error);
-  }
+  // Send order to Google Apps Script / Google Sheet in the background.
+  fetch(GOOGLE_SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify({
+      name: data.name || '',
+      phone: data.phone || '',
+      address: data.address || '',
+      landmark: data.landmark || '',
+      city: data.city || '',
+      product: data.product || 'Waist Shaper',
+      deal: data.selectedDeal || '',
+      quantity: data.quantity || '',
+      price: data.price || '',
+      total: data.total || ''
+    })
+  }).catch(error => console.error('Google Sheet order submission:', error));
 
-  // Keep the requested 2-second processing screen.
+  // Start the 1.5-second processing timer immediately.
+  // Do not wait for Google Sheets/network response before showing Thank You.
   setTimeout(function(){
     const name = data.name || 'Customer';
     const nameEl = document.getElementById('thankYouName');
