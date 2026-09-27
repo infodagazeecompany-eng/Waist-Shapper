@@ -1,3 +1,4 @@
+```
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -269,7 +270,7 @@ footer{background:#100f0e}
 !function (w, d, t) {
   w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
 var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.setAndDefer=ttq.setAndDefer,ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-  ttq.load('DAQFF1BC77UFN7D6D05G');
+  ttq.load('DASQB4JC77U8O3I501L0');
   ttq.page();
 }(window, document, 'ttq');
 </script>
@@ -512,9 +513,10 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
     thankYou.style.display = 'flex';
     document.body.style.overflow = '';
 
-    // TikTok Purchase event: fire only after the order reaches the Thank You state.
-    // TikTok's current standard event name is Purchase.
-    if (typeof ttq !== 'undefined' && typeof ttq.track === 'function') {
+    // TikTok Purchase: fire once only after the Thank You state is displayed.
+    // The session flag prevents duplicate Purchase events from this page flow.
+    if (!sessionStorage.getItem('tiktok_purchase_fired') &&
+        typeof ttq !== 'undefined' && typeof ttq.track === 'function') {
       ttq.track('Purchase', {
         content_type: 'product',
         content_ids: ['waist-shaper'],
@@ -522,6 +524,7 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
         value: total,
         currency: 'PKR'
       });
+      sessionStorage.setItem('tiktok_purchase_fired', '1');
     }
 
     // Show a clear thank-you state in the browser URL without requiring
@@ -563,3 +566,4 @@ document.addEventListener('click', function(e) {
 
 </body>
 </html>
+```
