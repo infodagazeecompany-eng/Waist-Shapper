@@ -318,8 +318,8 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <h1>WAIST <span>SHAPER</span></h1>
     <p class="script">Shape Your Confidence</p>
     <p class="lead">A comfortable, flexible waist shaper designed for a smoother, slimmer-looking silhouette under your everyday outfits.</p>
-    <div class="hero-price">
-      <span>Starting from</span><strong>Rs. 1,999</strong>
+    <div class="hero-price" style="gap:14px;align-items:center;">
+      <span><del>Rs. 2,999</del> &nbsp; <b style="color:#9a703b"></b></span><strong>Rs. 1,799</strong>
     </div>
     <a class="cta" href="#order">🛒 Order Now</a>
     <div class="trust"><span>🚚 Cash on Delivery</span><span>↩ Easy Returns</span><span>✓ Quality Product</span></div>
@@ -333,7 +333,7 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
     <form id="orderForm">
 <label>Choose Your Deal
   <select name="selectedDeal" required>
-    <option value="1 Waist Shaper — Rs. 1,999">1 Waist Shaper — Rs. 1,999</option>
+    <option value="1 Waist Shaper — Rs. 1,799">1 Waist Shaper — Rs. 1,799 <span>()</span></option>
     <option value="2 Waist Shapers — Rs. 3,499">2 Waist Shapers — Rs. 3,499</option>
     <option value="3 Waist Shapers — Rs. 4,499">3 Waist Shapers — Rs. 4,499</option>
   </select>
@@ -353,6 +353,12 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
         <label>City<input required name="city" placeholder="Your city"></label>
       </div>
       
+      <div class="order-summary" id="orderSummary" aria-label="Order summary">
+        <div><span>Subtotal</span><strong id="summarySubtotal">Rs. 1,799</strong></div>
+        <div><span>Delivery Charges</span><strong>Rs. 200</strong></div>
+        <div class="summary-total"><span>Total</span><strong id="summaryTotal">Rs. 1,999</strong></div>
+      </div>
+
       <button type="submit" class="submit">CONFIRM ORDER — CASH ON DELIVERY</button>
       <p class="safe">🔒 Your information is used only to process your order.</p>
       <div id="success" class="success"></div>
@@ -407,6 +413,14 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 </section>
 
 <footer>© 2026 Waist Shaper Store · All rights reserved</footer>
+
+<style id="order-summary-style">
+  .order-summary{margin:18px 0 20px;padding:16px 18px;background:#faf7f1;border:1px solid #e5d8c5;border-radius:14px;font-family:Arial,Helvetica,sans-serif}
+  .order-summary>div{display:flex;justify-content:space-between;align-items:center;padding:7px 0;color:#555;font-size:14px}
+  .order-summary strong{color:#222;font-weight:800}
+  .order-summary .summary-total{margin-top:7px;padding-top:12px;border-top:1px solid #dfd1bd;font-size:17px;color:#171514}
+  .order-summary .summary-total strong{font-size:20px;color:#9a703b}
+</style>
 
 <style id="processing-page-style">
   #processingPage{
@@ -475,12 +489,19 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
   const priceMatch = deal.match(/Rs\.\s*([\d,]+)/i);
   const quantity = qtyMatch ? Number(qtyMatch[1]) : 1;
   const price = priceMatch ? Number(priceMatch[1].replace(/,/g, '')) : 0;
-  const total = price;
+  const deliveryCharges = 200;
+  const subtotal = price;
+  const total = subtotal + deliveryCharges;
 
   data.product = 'Waist Shaper';
   data.quantity = quantity;
   data.price = price;
   data.total = total;
+
+  const summarySubtotal = document.getElementById('summarySubtotal');
+  const summaryTotal = document.getElementById('summaryTotal');
+  if (summarySubtotal) summarySubtotal.textContent = `Rs. ${subtotal.toLocaleString('en-PK')}`;
+  if (summaryTotal) summaryTotal.textContent = `Rs. ${total.toLocaleString('en-PK')}`;
 
   document.getElementById('orderQuantity').value = quantity;
   document.getElementById('orderPrice').value = price;
@@ -563,6 +584,19 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
     window.scrollTo({top:0, behavior:'smooth'});
   }, 1500);
 });
+
+const dealSelect = document.querySelector('select[name="selectedDeal"]');
+if (dealSelect) {
+  dealSelect.addEventListener('change', function(){
+    const match = this.value.match(/Rs\.\s*([\d,]+)/i);
+    const subtotal = match ? Number(match[1].replace(/,/g, '')) : 0;
+    const total = subtotal + 200;
+    const summarySubtotal = document.getElementById('summarySubtotal');
+    const summaryTotal = document.getElementById('summaryTotal');
+    if (summarySubtotal) summarySubtotal.textContent = `Rs. ${subtotal.toLocaleString('en-PK')}`;
+    if (summaryTotal) summaryTotal.textContent = `Rs. ${total.toLocaleString('en-PK')}`;
+  });
+}
 
 document.getElementById('backHome').addEventListener('click', function(e){
   e.preventDefault();
