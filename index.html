@@ -343,6 +343,14 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <input type="hidden" name="price" id="orderPrice">
 <input type="hidden" name="total" id="orderTotal">
 
+      <label>Choose Your Size
+        <select name="size" required>
+          <option value="" disabled selected>Select waist size</option>
+          <option value="S (Waist 28-32)">S — Waist 28–32</option>
+          <option value="M (Waist 32-38)">M — Waist 32–38</option>
+          <option value="L (Waist 38-42)">L — Waist 38–42</option>
+        </select>
+      </label>
       <div class="row">
         <label>Full Name<input required name="name" placeholder="Your name"></label>
         <label>Phone Number<input required name="phone" type="tel" placeholder="03XXXXXXXXX"></label>
@@ -526,6 +534,7 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
       city: data.city || '',
       product: data.product || 'Waist Shaper',
       deal: data.selectedDeal || '',
+      size: data.size || '',
       quantity: data.quantity || '',
       price: data.price || '',
       total: data.total || ''
