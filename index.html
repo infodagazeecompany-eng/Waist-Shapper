@@ -281,7 +281,7 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1100112712752830&ev=PageView&noscript=1" /></noscript>
 <!-- End Meta Pixel Code -->
 
-<!-- TikTok Pixel Code Start: replace PASTE_NEW_TIKTOK_PIXEL_ID_HERE with your NEW TikTok Pixel ID -->
+<!-- TikTok Pixel Code Start: replace DBA0UVJC77U01S6KN62G with your NEW TikTok Pixel ID -->
 <script>
 !function (w, d, t) {
   w.TiktokAnalyticsObject = t;
@@ -316,7 +316,7 @@ src="https://www.facebook.com/tr?id=1100112712752830&ev=PageView&noscript=1" /><
     first.parentNode.insertBefore(s, first);
   };
 
-  ttq.load('PASTE_NEW_TIKTOK_PIXEL_ID_HERE');
+  ttq.load('DBA0UVJC77U01S6KN62G');
   ttq.page();
 }(window, document, 'ttq');
 </script>
@@ -517,10 +517,11 @@ const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbx8Xm_0uDCdV2A
 
 document.getElementById('orderForm').addEventListener('submit', async function(e){
   e.preventDefault();
-  // Track at most once for this individual order submission, while allowing future orders.
-  let purchaseTrackedForThisOrder = false;
-
   const form = this;
+  // Lock this form immediately so double-clicks/rapid submits cannot create duplicate orders/events.
+  if (form.dataset.submitting === 'true') return;
+  form.dataset.submitting = 'true';
+  let purchaseTrackedForThisOrder = false;
   const data = Object.fromEntries(new FormData(form).entries());
 
   // Convert the selected deal into Quantity, Price and Total for Google Sheets.
@@ -603,16 +604,17 @@ document.getElementById('orderForm').addEventListener('submit', async function(e
       purchaseTrackedForThisOrder = true;
     }
 
-    // TikTok Purchase remains disabled until a real TikTok Pixel ID is added.
-    if (typeof ttq !== 'undefined' && typeof ttq.track === 'function' &&
-        !String('PASTE_NEW_TIKTOK_PIXEL_ID_HERE').includes('PASTE_NEW_')) {
-      ttq.track('Purchase', {
+    // TikTok standard conversion event for an order submitted (Cash on Delivery).
+    // Fire only on the Thank You transition, once for this submission.
+    if (!purchaseTrackedForThisOrder && typeof ttq !== 'undefined' && typeof ttq.track === 'function') {
+      ttq.track('CompletePayment', {
         content_type: 'product',
-        content_ids: ['waist-shaper'],
+        content_id: 'waist-shaper',
         quantity: quantity,
         value: total,
         currency: 'PKR'
       });
+      purchaseTrackedForThisOrder = true;
     }
 
     // Show a clear thank-you state in the browser URL without requiring
@@ -644,6 +646,7 @@ document.getElementById('backHome').addEventListener('click', function(e){
   document.querySelector('footer').style.display = '';
   document.getElementById('thankYouPage').style.display = 'none';
   document.getElementById('orderForm').reset();
+  document.getElementById('orderForm').dataset.submitting = 'false';
   history.pushState({}, '', window.location.pathname);
   window.scrollTo({top:0, behavior:'smooth'});
 });
